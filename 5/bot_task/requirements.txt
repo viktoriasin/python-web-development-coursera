@@ -3,5 +3,3 @@ pillow==6.0.0
 requests==2.21.0
 flask
 gunicorn
-
-
