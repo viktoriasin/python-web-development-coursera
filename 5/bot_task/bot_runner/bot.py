@@ -90,7 +90,12 @@ def add_place_final(message):
         update_state(message.from_user.id, State.S_INITIAL.value)
 
 
-@bot.message_handler(content_types=['text'])
+@bot.message_handler(content_types=['start'])
 def first_greeting(message):
     bot.send_message(message.chat.id, text='Hi! Nice to meet you!')
+    bot.send_message(message.chat.id, text="""I help you to save all your favorite places!'
+                                           'Here what can I do:'
+                                           '/add_place - add new place with name and coordinate'
+                                           '/list_places - list all place that you had added'
+                                           '/reset_places - delete all your places info""")
     db.add_user(user_id=message.from_user.id)
