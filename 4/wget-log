@@ -1,0 +1,6 @@
+--2020-10-25 21:26:03--  https://d3c33hcgiwev3.cloudfront.net/PLLbZmGBEeiKNQ6MFIim6g_3ce8b800618111e88d73c38a9a838951_somemart.zip?Expires=1603756800
+Resolving d3c33hcgiwev3.cloudfront.net (d3c33hcgiwev3.cloudfront.net)... 143.204.175.5, 143.204.175.69, 143.204.175.99, ...
+Connecting to d3c33hcgiwev3.cloudfront.net (d3c33hcgiwev3.cloudfront.net)|143.204.175.5|:443... connected.
+HTTP request sent, awaiting response... 403 Forbidden
+2020-10-25 21:26:04 ERROR 403: Forbidden.
+

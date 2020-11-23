@@ -1,0 +1,66 @@
+.form-control {
+    border: solid 3px;
+    border-radius:20px; /* round corners */
+    height: 40px;
+    text-indent: 10px;
+}
+
+.navbar {
+    margin-bottom: 10px;
+}
+
+.card-small {
+    border: solid 4px;
+    border-color: black;
+}
+
+h6 {
+    color: gray;
+}
+hr {
+     border: solid 1px;
+    color:black;
+}
+
+.card-img {
+    margin-top: 20px;
+    max-width: 70%;
+    max-height: 80%;
+}
+
+.bg-light {
+    border-bottom: 2px solid black;
+    border-top: 2px solid black;
+}
+
+.col-2 {
+    color: gray;
+}
+
+a:visited {
+  text-decoration: underline;
+}
+
+a:link {
+  text-decoration: underline;
+}
+
+.header-link {
+    margin: 10px;
+}
+
+.fa-search {
+    margin-left: 15px;
+}
+
+.mr-sm-2 {
+    margin-left: 10px;
+}
+
+.side-bar {
+    margin-top: 35px;
+}
+
+.members {
+    margin-top: 35px;
+}

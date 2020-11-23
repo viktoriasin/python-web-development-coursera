@@ -1,0 +1,3 @@
+virtualenv -p python3 coursera_blog 
+source ./coursera_blog/bin/activate
+
