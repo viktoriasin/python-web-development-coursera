@@ -1,1 +1,1 @@
-web: gunicorn run_server:server
+worker: python3 __main__.py

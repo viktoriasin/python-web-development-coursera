@@ -94,5 +94,3 @@ def add_place_final(message):
 def first_greeting(message):
     bot.send_message(message.chat.id, text='Hi! Nice to meet you!')
     db.add_user(user_id=message.from_user.id)
-    print(get_state(message.from_user.id))
-    print(type(get_state(message.from_user.id)))
