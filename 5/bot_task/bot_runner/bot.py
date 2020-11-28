@@ -36,6 +36,17 @@ def update_state(user_id, state):
         db.update_user_state(user_id=user_id, state=state)
 
 
+@bot.message_handler(commands=['start'])
+def first_greeting(message):
+    bot.send_message(message.chat.id, text='Hi! Nice to meet you!')
+    bot.send_message(message.chat.id, text='I help you to save all your favorite places!\n'
+                                           ' Here what can I do: \n'
+                                           ' /add_place - add a new place with its name and coordinates \n'
+                                           ' /list_places - list all the place that you had added \n'
+                                           ' /reset_places - delete all your places info')
+    db.add_user(user_id=message.from_user.id)
+
+
 @bot.message_handler(commands=['reset_places'])
 def reset_places(message):
     db.reset_places(user_id=message.from_user.id)
@@ -89,13 +100,3 @@ def add_place_final(message):
             bot.send_message(message.chat.id, text='The place {} is added'.format(place_name))
         update_state(message.from_user.id, State.S_INITIAL.value)
 
-
-@bot.message_handler(content_types=['start'])
-def first_greeting(message):
-    bot.send_message(message.chat.id, text='Hi! Nice to meet you!')
-    bot.send_message(message.chat.id, text="""I help you to save all your favorite places!'
-                                           'Here what can I do:'
-                                           '/add_place - add new place with name and coordinate'
-                                           '/list_places - list all place that you had added'
-                                           '/reset_places - delete all your places info""")
-    db.add_user(user_id=message.from_user.id)
