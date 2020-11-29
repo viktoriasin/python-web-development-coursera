@@ -65,7 +65,7 @@ def add_place(conn, user_id, place_name, lat, lon):
     val = (user_id, place_name, lat, lon, now)
     val_check = (user_id, place_name)
     if cur.execute('SELECT place_name FROM user_data WHERE user_id=? and place_name=?',
-                       val_check).fetchall():
+                   val_check).fetchall():
         return AnswerState.S_ERROR
     try:
         cur.execute('INSERT INTO user_data VALUES (?, ?, ?, ?, ?)', val)

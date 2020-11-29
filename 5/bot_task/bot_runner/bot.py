@@ -2,6 +2,7 @@ import os
 import logging
 
 import telebot
+from telebot import types
 
 from db.extra_types import State, AnswerState
 import db.db_api as db
@@ -23,6 +24,14 @@ def add_temp_values(name, value):
     TEMP_VALUES[name] = str(value)
 
 
+def create_keyboard():
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
+    buttons = [types.InlineKeyboardButton(text=c, callback_data=c)
+               for c in ('YES', 'NO')]
+    keyboard.add(*buttons)
+    return keyboard
+
+
 def get_state(user_id):
     state = db.get_user_state(user_id=user_id)
     if state is None or user_id is None:
@@ -42,15 +51,27 @@ def first_greeting(message):
     bot.send_message(message.chat.id, text='I help you to save all your favorite places!\n'
                                            ' Here what can I do: \n'
                                            ' /add_place - add a new place with its name and coordinates \n'
-                                           ' /list_places - list all the place that you had added \n'
+                                           ' /list_places - list all the places that you have added \n'
                                            ' /reset_places - delete all your places info')
     db.add_user(user_id=message.from_user.id)
 
 
 @bot.message_handler(commands=['reset_places'])
 def reset_places(message):
-    db.reset_places(user_id=message.from_user.id)
-    bot.send_message(message.chat.id, text='The history is cleared!')
+    keyboard = create_keyboard()
+    bot.send_message(message.chat.id,
+                     text='Are you sure you want to delete ALL your places?',
+                     reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda x: True)
+def reset_places_confirmation(callback_query):
+    message = callback_query.message
+    if callback_query.data == 'YES':
+        db.reset_places(user_id=message.from_user.id)
+        bot.send_message(message.chat.id, text='The history is cleared!')
+    elif callback_query.data == 'NO':
+        bot.send_message(message.chat.id, text='Ok, deleting process has delayed!')
 
 
 @bot.message_handler(commands=['list_places'])
