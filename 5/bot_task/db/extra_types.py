@@ -6,6 +6,7 @@ class State(Enum):
     S_ADDING_NAME_TO_PLACE = 2
     S_ADDING_COORD_TO_PLACE = 3
     S_EMPTY = 4
+    S_GET_PLACES_NEARBY = 5
 
 
 class AnswerState(Enum):

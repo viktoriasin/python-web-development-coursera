@@ -1,29 +1,41 @@
 import os
 
-from bot_runner.bot import bot
 from map_api.client import Client
-from db.db_api import list_places
+from db.db_api import list_all_places
+
+METERS_IN_MILES_UNIT = 1609.344
 
 
-def collect_places(user_id):
-    places = list_places(user_id, 100)
+def miles_to_meters_converter(miles):
+    return miles * METERS_IN_MILES_UNIT
+
+
+def get_places(user_id):
+    places = list_all_places(user_id=user_id)
+    return places
+
+
+def iter_places(place_cur):
+    for row in place_cur:
+        yield row[0], {
+            "latLng": {
+                "lat": row[1],
+                "lng": row[2]
+            }}
+
+
+def iter_distance(places, client, cur_location):
     i = 0
-    rows_returned = places.rowcount
-    while i <= rows_returned:
-        temp_places = places[i:i + 100]  # Mapquest API can handle only 100 items in one to many mode
-        places_ids = []
-        req_data = []
-        for place in temp_places:
-            places_ids.append(place[0])
-            req_data.append({
-                "latLng": {
-                    "lat": place[1],
-                    "lng": place[2]
-                }})
-        yield req_data, places_ids
+    while i <= len(places):
+        data = places[i:i + 100]
+        i += 100
+        print(data)
+        yield client.distance_matrix(origins=cur_location,
+                                     destinations=data)['distance']
 
 
-def call_for_places_nearby(user_id, user_lat, user_lon):
+def call_for_places_nearby(user_id, user_lat, user_lon) -> list:
+    res_ids = []
     client = Client(os.environ.get('API_KEY'))
     cur_location = [{
         "latLng": {
@@ -31,8 +43,19 @@ def call_for_places_nearby(user_id, user_lat, user_lon):
             "lng": user_lon
         }
     }]
-    for places, places_ids in collect_places(user_id):
-        distances = client.distance_matrix(origins=cur_location,
-                                     destinations=places)['distance']
-        for distance in distances[1:]:
-            
+    places = get_places(user_id)
+    req_data = []
+    places_ids = []
+    for id_, place in iter_places(places):
+        req_data.append(place)
+        places_ids.append(id_)
+    for distances in iter_distance(req_data, client, cur_location):
+        for i, distance in enumerate(distances[1:], start=1):
+            if miles_to_meters_converter(distance) < 50000:
+                res_ids.append(places_ids[i-1])
+                if len(res_ids) == 10:
+                    break
+
+        if len(res_ids) == 10:
+            break
+    return res_ids
